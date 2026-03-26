@@ -11,7 +11,7 @@ It's quite unusual to see a commit where only a few lines changed — and those 
 
 First, I wanted to verify that the protected stack is indeed 512 KB in size, as stated in the comment accompanying the patch. This is straightforwardly confirmed by the implementation of `ProtectedStack::allocateStack`. The memory manager allocates a single region of 0x84000 bytes, where one page (0x4000) serves as a guard and the remaining 0x80000 bytes (512 KB) constitute the actual stack.
 
-![alt text](image.png)
+![alt text](images/image.png)
 
 Next, I identified all the places where `bindTargets.count()` could lead to problematic behavior given a 512 KB stack. The most compelling case was the `setUpPageInLinkingRegions` function, which performs an on-stack allocation of a buffer sized `bindTargets.count() * ptr_size` and then does a memcpy into it from data partially controlled by an attacker.
 
